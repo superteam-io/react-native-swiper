@@ -41,6 +41,12 @@ const styles = {
     backgroundColor: 'transparent',
   },
 
+  skipButton: {
+    position: 'absolute',
+    top: 35,
+    right: 0
+  },
+
   pagination_x: {
     position: 'absolute',
     bottom: 25,
@@ -323,10 +329,10 @@ export default class extends Component {
     this.autoplayTimer && clearTimeout(this.autoplayTimer)
     this.autoplayTimer = setTimeout(() => {
       if (!this.props.loop && (
-          this.props.autoplayDirection
-            ? this.state.index === this.state.total - 1
-            : this.state.index === 0
-        )
+        this.props.autoplayDirection
+          ? this.state.index === this.state.total - 1
+          : this.state.index === 0
+      )
       ) return this.setState({ autoplayEnd: true })
 
       this.scrollBy(this.props.autoplayDirection ? 1 : -1)
@@ -522,7 +528,7 @@ export default class extends Component {
    * @return {object} react-dom
    */
   renderPagination = () => {
-     // By default, dots only show when `total` >= 2
+    // By default, dots only show when `total` >= 2
     if (this.state.total <= 1) return null
 
     let dots = []
@@ -606,6 +612,21 @@ export default class extends Component {
     )
   }
 
+  renderSkipButton = () => {
+    let button = null;
+
+    if (this.props.loop ||
+      this.state.index !== this.state.total - 1) {
+      button = this.props.skipButton;
+    }
+
+    return (
+      <SafeAreaView pointerEvents='box-none' style={styles.skipButton}>
+        {button}
+      </SafeAreaView>
+    );
+  };
+
   renderButtons = () => {
     return (
       <SafeAreaView pointerEvents='box-none' style={[styles.buttonWrapper, {
@@ -637,26 +658,26 @@ export default class extends Component {
     if (Platform.OS === 'ios') {
       return (
         <ScrollView ref={this.refScrollView}
-          {...this.props}
-          {...this.scrollViewPropOverrides()}
-          contentContainerStyle={[styles.wrapperIOS, this.props.style]}
-          contentOffset={this.state.offset}
-          onScrollBeginDrag={this.onScrollBegin}
-          onMomentumScrollEnd={this.onScrollEnd}
-          onScrollEndDrag={this.onScrollEndDrag}
-          style={this.props.scrollViewStyle}>
+                    {...this.props}
+                    {...this.scrollViewPropOverrides()}
+                    contentContainerStyle={[styles.wrapperIOS, this.props.style]}
+                    contentOffset={this.state.offset}
+                    onScrollBeginDrag={this.onScrollBegin}
+                    onMomentumScrollEnd={this.onScrollEnd}
+                    onScrollEndDrag={this.onScrollEndDrag}
+                    style={this.props.scrollViewStyle}>
           {pages}
         </ScrollView>
-       )
+      )
     }
     return (
       <ViewPagerAndroid ref={this.refScrollView}
-        {...this.props}
-        initialPage={this.props.loop ? this.state.index + 1 : this.state.index}
-        onPageScrollStateChanged={this.onPageScrollStateChanged}
-        onPageSelected={this.onScrollEnd}
-        key={pages.length}
-        style={[styles.wrapperAndroid, this.props.style]}>
+                        {...this.props}
+                        initialPage={this.props.loop ? this.state.index + 1 : this.state.index}
+                        onPageScrollStateChanged={this.onPageScrollStateChanged}
+                        onPageSelected={this.onScrollEnd}
+                        key={pages.length}
+                        style={[styles.wrapperAndroid, this.props.style]}>
         {pages}
       </ViewPagerAndroid>
     )
@@ -685,6 +706,7 @@ export default class extends Component {
       renderPagination,
       showsButtons,
       showsPagination,
+      skipButton,
     } = this.props;
     // let dir = state.dir
     // let key = 0
@@ -737,6 +759,7 @@ export default class extends Component {
           : this.renderPagination())}
         {this.renderTitle()}
         {showsButtons && this.renderButtons()}
+        {showsButtons && skipButton && this.renderSkipButton()}
       </View>
     )
   }
