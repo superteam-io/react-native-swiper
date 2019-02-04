@@ -13,7 +13,8 @@ import {
   TouchableOpacity,
   ViewPagerAndroid,
   Platform,
-  ActivityIndicator
+  ActivityIndicator,
+  SafeAreaView,
 } from 'react-native'
 
 /**
@@ -553,9 +554,9 @@ export default class extends Component {
     }
 
     return (
-      <View pointerEvents='none' style={[styles['pagination_' + this.state.dir], this.props.paginationStyle]}>
+      <SafeAreaView pointerEvents='none' style={[styles['pagination_' + this.state.dir], this.props.paginationStyle]}>
         {dots}
-      </View>
+      </SafeAreaView>
     )
   }
 
@@ -607,13 +608,13 @@ export default class extends Component {
 
   renderButtons = () => {
     return (
-      <View pointerEvents='box-none' style={[styles.buttonWrapper, {
+      <SafeAreaView pointerEvents='box-none' style={[styles.buttonWrapper, {
         width: this.state.width,
         height: this.state.height
       }, this.props.buttonWrapperStyle]}>
         {this.renderPrevButton()}
         {this.renderNextButton()}
-      </View>
+      </SafeAreaView>
     )
   }
 
